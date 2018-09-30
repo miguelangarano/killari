@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Killari</title>
+<style>
+    body {background-color: #FFFFFF;}
+    .header {text-align: center;
+        background-color: #00a8a9;
+        height: 100pt;}
+    .title {
+        padding-top: 30pt;
+        background-color: #00a8a9;
+        font-family: Vegur, 'PT Sans', Verdana, Sans-serif;
+    }
+    .body{
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+    <div class='header'>
+        <h1 class='title'>KILLARI</h1>
+    </div>
+    <div class="body">
+        <p>El cliente <strong>{{ nombre }}</strong> con email: <strong>{{ email }}</strong> con telefono: <strong>{{ numero }}</strong> </p>
+        <p>Ha agendado una cita para la fecha: <strong>{{ fecha }}</strong> a las: <strong>{{ hora }}</strong> con ID:<strong>{{ id }}</strong> .</p>
+        <p>El servicio solicitado es: <strong>{{ servicio }}</strong>.</p>
+        <p>Por favor, verifique la sincronización de la cita con Google Calendar de su cuenta.</p>
+        <p>KILLARI Centro de Relajación.</p>
+    </div>
+</body>
+</html>
