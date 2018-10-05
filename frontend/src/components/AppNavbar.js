@@ -29,7 +29,7 @@ class AppNavbar extends Component {
 
 
     onClickCancelar(){
-        console.log("cancelar");
+      window.location = 'http://www.killari.com.ec';
     }
 
 

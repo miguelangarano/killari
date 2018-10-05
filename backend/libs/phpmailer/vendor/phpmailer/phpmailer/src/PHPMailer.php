@@ -805,10 +805,10 @@ class PHPMailer
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
                 echo htmlentities(
-                    preg_replace('/[\r\n]+/', '', $str),
+                    preg_replace('/[\r\n]+/', '', ''),
                     ENT_QUOTES,
                     'UTF-8'
-                ), "<br>\n";
+                );
                 break;
             case 'echo':
             default:
@@ -1982,7 +1982,7 @@ class PHPMailer
             'file_open' => 'File Error: Could not open file: ',
             'from_failed' => 'The following From address failed: ',
             'instantiate' => 'Could not instantiate mail function.',
-            'invalid_address' => 'Invalid address: ',
+            'invalid_address' => '',
             'mailer_not_supported' => ' mailer is not supported.',
             'provide_address' => 'You must provide at least one recipient email address.',
             'recipients_failed' => 'SMTP Error: The following recipients failed: ',

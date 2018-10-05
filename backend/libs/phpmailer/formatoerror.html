@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Killari</title>
+<style>
+    .header {text-align: center;
+        background-color: #ffffff;
+        height: 100pt;}
+    .title {
+        padding-top: 30pt;
+        background-color: #ffffff;
+        font-family: Vegur, 'PT Sans', Verdana, Sans-serif;
+    }
+    .body{
+        text-align: center;
+        background-color: #00a8a9;
+        color:#ffffff;
+    }
+</style>
+</head>
+<body>
+    <div class='header'>
+        <br>
+        <br>
+        <img src="http://www.killari.com.ec/reservaciones/logo-killari.png" alt="">
+    </div>
+    <div class="body">
+        <p>Estimad@ <strong>{{ nombre }} {{ apellido }}</strong></p>
+        <p>Lamentamos informarle que por un error al agendar su reservacion para la fecha: <strong>{{ fecha }}</strong> a las: <strong>{{ hora }}</strong> con ID: <strong>{{ id }}</strong> .</p>
+        <p>Para recibir el servicio de: <strong>{{ servicio }}</strong>.</p>
+        <p>Por lo tanto, su reservacion ha sido cancelada. Por favor intente reservar nuevamente.</p>
+        <p>Lo esperamos para que tenga la mejor experiencia de spa.</p>
+        <p>KILLARI Centro de Relajación.</p>
+    </div>
+</body>
+</html>

@@ -2,56 +2,71 @@
 
 header('Access-Control-Allow-Origin: *');
 require_once('./libs/phpmailer/email.php');
-require_once('./libs/googlecalendar/quickstart.php');
 require_once('Db.php');
 
 
 class Data{
 
-    //public $proxy='http://www.killari.com.ec/wp-content/themes/wellnesscenter/assets/js/';
-    public $proxy='http://localhost/killa/';
+    public $proxy='http://www.killari.com.ec/reservaciones/backend/';
+    //public $proxy='http://localhost/killari/backend/';
 
     public function saveData($obj){
         $db=Db::conectar();
-        $insert=$db->prepare('INSERT INTO reservas VALUES(NULL, :servicio, :fecha, :hora, :nombre, :direccion, :ciudad, :numero, :correo, :obs, :news  )');
+        $insert=$db->prepare('INSERT INTO reservas VALUES(NULL, :servicio, :fecha, :hora, :nombre, :apellido, :direccion, :ciudad, :telefono, :email, :comentario, :formapago  )');
         $insert->bindValue('servicio',$obj->servicio);
-        $insert->bindValue('fecha',$obj->fecha);
-        $insert->bindValue('hora',$obj->hora);
         $insert->bindValue('nombre',$obj->nombre);
+        $insert->bindValue('apellido',$obj->apellido);
         $insert->bindValue('direccion',$obj->direccion);
         $insert->bindValue('ciudad',$obj->ciudad);
-        $insert->bindValue('numero',$obj->numero);
-        $insert->bindValue('correo',$obj->correo);
-        $insert->bindValue('obs',$obj->obs);
-        $insert->bindValue('news',$obj->news);
+        $insert->bindValue('telefono',$obj->telefono);
+        $insert->bindValue('email',$obj->email);
+        $insert->bindValue('comentario',$obj->comentario);
+        $insert->bindValue('fecha',$obj->fechadb);
+        $insert->bindValue('hora',$obj->hora);
+        $insert->bindValue('formapago',$obj->formapago);
         $insert->execute();
         $LAST_ID = $db->lastInsertId();
+        $insert=$db->prepare('UPDATE veces SET times=:times');
+        $insert->bindValue('times',$LAST_ID);
+        $insert->execute();
 		return $LAST_ID;
     }
 
     public function saveHistoryData($obj){
         $db=Db::conectar();
-        $insert=$db->prepare('INSERT INTO historiareservas VALUES(NULL, :id_reserva, :servicio, :fecha, :hora, :nombre, :direccion, :ciudad, :numero, :correo, :obs, :news  )');
-        $insert->bindValue('id_reserva',$obj->id);
+        $insert=$db->prepare('INSERT INTO historiareservas VALUES(NULL, :id_reserva, :servicio, :fecha, :hora, :nombre, :apellido, :direccion, :ciudad, :telefono, :email, :comentario, :formapago  )');
+        $insert->bindValue('id_reserva', $obj->id);
         $insert->bindValue('servicio',$obj->servicio);
-        $insert->bindValue('fecha',$obj->fecha);
-        $insert->bindValue('hora',$obj->hora);
         $insert->bindValue('nombre',$obj->nombre);
+        $insert->bindValue('apellido',$obj->apellido);
         $insert->bindValue('direccion',$obj->direccion);
         $insert->bindValue('ciudad',$obj->ciudad);
-        $insert->bindValue('numero',$obj->numero);
-        $insert->bindValue('correo',$obj->correo);
-        $insert->bindValue('obs',$obj->obs);
-        $insert->bindValue('news',$obj->news);
+        $insert->bindValue('telefono',$obj->telefono);
+        $insert->bindValue('email',$obj->email);
+        $insert->bindValue('comentario',$obj->comentario);
+        $insert->bindValue('fecha',$obj->fechadb);
+        $insert->bindValue('hora',$obj->hora);
+        $insert->bindValue('formapago',$obj->formapago);
         $insert->execute();
         $LAST_ID = $db->lastInsertId();
-		return $LAST_ID;
+        if(!empty($LAST_ID)){
+            return 'ok';
+        }
+    }
+
+    public function getLastId(){
+        $db=Db::conectar();
+        $select=$db->prepare('SELECT * FROM veces');
+        $select->execute();
+        $cita=$select->fetch();
+        $id=$cita['times'];
+        return $id;
     }
 
     public function getData($obj){
         $db=Db::conectar();
         $select=$db->prepare('SELECT * FROM reservas WHERE fecha=:fecha AND hora=:hora');
-        $select->bindValue('fecha',$obj->fecha);
+        $select->bindValue('fecha',$obj->fechadb);
         $select->bindValue('hora',$obj->hora);
         $select->execute();
         $cita=$select->fetch();
@@ -59,42 +74,16 @@ class Data{
         return $id;
     }
 
-
     public function sendEmail($obj){
         $email=new Email();
-        $email->sendEmail($this->proxy, $obj, 1);
+        return $email->sendEmail($this->proxy, $obj, 1);
         //$email->sendEmail('centroderelajacion@killari.com.ec', $this->proxy, $obj->nombre, $obj->fecha, $obj->hora, $obj->servicio, 0);
     }
 
-
-    public function syncCalendar($obj){
-        $db=Db::conectar();
-        $select=$db->prepare('SELECT vecess FROM veces');
-        $select->execute();
-        $times=$select->fetch();
-        $veces=$times['vecess'];
-
-        if($veces==''){
-            $veces=1;
-            $insert=$db->prepare('INSERT INTO veces VALUES(NULL, :vecess  )');
-            $insert->bindValue('vecess',$veces);
-            $insert->execute();
-        }else{
-            $veces++;
-            $aid=$db->lastInsertId();
-            echo 'v: '.$veces.'<br/>';
-            $insert=$db->prepare('UPDATE veces SET vecess=:veces WHERE id_times=3 ');
-            $insert->bindValue('veces',$veces);
-            //$insert->bindValue('id',$aid);
-            $insert->execute();
-        }
-        
-        
-        $calendar=new SyncCalendar();
-        $client=$calendar->getClient();
-        $events=$calendar->addEvent($client, $obj);
-        //$events=$calendar->listEvents($client);
-        //echo json_encode($events);
+    public function sendErrorEmail($obj){
+        $email=new Email();
+        $email->sendErrorEmail($this->proxy, $obj);
+        //$email->sendEmail('centroderelajacion@killari.com.ec', $this->proxy, $obj->nombre, $obj->fecha, $obj->hora, $obj->servicio, 0);
     }
 
     public function checkPost($data){
@@ -127,33 +116,43 @@ if(isset($_POST['send'])){
     $obj->fecha=$data->checkPost('fecha');
     $obj->hora=$data->checkPost('hora');
     $obj->formapago=$data->checkPost('formapago');
+    //echo $obj->fecha;
+    $fechaDb=strtotime($obj->fecha);
+    $obj->fechadb=date('Y-m-d',$fechaDb);
+    //echo $obj->fechadb;
 
     //Check if appointment exists at date and hour gathered
     $id=0;
     $id=$data->getData($obj);
 
-    if(!empty($id)){
+    if(empty($id)){
         //Save Data in Db reservas
         //echo json_encode($obj);
-        $obj->id=$data->saveData($obj);
-
-        //Save data in db historiareservas
-        $data->saveHistoryData($obj);
-
-        //Appointment in Calendar
-        $time = strtotime($obj->fecha.' '.$obj->hora);
-        $newformat = date('Y-m-d'.'\T'.'H:i:s',$time);
-        $start=$newformat.'-05:00';
-        $end = date('Y-m-d\TH:i:s',strtotime('+1 hour',strtotime($newformat))).'-05:00';
-        $obj->start=$start;
-        $obj->end=$end;
-        $obj->id=1;
-        $data->syncCalendar($obj);
-
+        $ok='';
         //Send Email
-        $data->sendEmail($obj);
+        $obj->id=$data->getLastId()+1;
+        $ok=$data->sendEmail($obj);
+        //echo json_encode($ok);
+        
+        if($ok=='ok'){
+            //Save data in db historiareservas
+            $obj->id=$data->saveData($obj);
+            $ok=$data->saveHistoryData($obj);
+            if($ok=='ok'){
+                echo json_encode($ok);
+            }else{
+                $ok='error 403';
+                $data->sendErrorEmail($obj);
+                echo json_encode($ok);
+            }
+        }else{
+            $ok='error 402';
+            echo json_encode($ok);
+        }
+        
+        
     }else{
-        echo 'error: 401';
+        echo json_encode('error: 401');
     }
 }
 

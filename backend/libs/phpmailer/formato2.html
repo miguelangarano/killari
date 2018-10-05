@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Killari</title>
+<style>
+    .header {text-align: center;
+        background-color: #ffffff;
+        height: 100pt;}
+    .title {
+        padding-top: 30pt;
+        background-color: #ffffff;
+        font-family: Vegur, 'PT Sans', Verdana, Sans-serif;
+    }
+    .body{
+        text-align: center;
+        background-color: #00a8a9;
+        color:#ffffff;
+    }
+</style>
+</head>
+<body>
+    <div class='header'>
+        <br>
+        <br>
+        <img src="http://www.killari.com.ec/reservaciones/logo-killari.png" alt="">
+    </div>
+    <div class="body">
+        <p>Por favor, ingrese a este link y copie el codigo de acceso para sincronizar el Calendario de Google</p>
+        <p>  <a href="{{ authurl }}">Sincronizacion de Calendario</a> </p>
+
+        <form action="http://www.killari.com.ec/reservaciones/backend/manageCalendarEmail.php" target="_blank" method="post">
+            Codigo:<br>
+            <input type="text" name="code">
+            <br>
+            <input type="submit" value="Submit">
+        </form> 
+
+        <p>KILLARI Centro de Relajación.</p>
+    </div>
+</body>
+</html>

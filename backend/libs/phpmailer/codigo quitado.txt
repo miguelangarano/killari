@@ -1,0 +1,5 @@
+Lin 1985 PHPMailer.php   en invalid_address                      Invalid address: 
+
+Lin 808  PHPMailer.php  en preg_replace como parametro final     $str 
+
+Lin 811 PHPMailer.php abajo de 'UTF-8'                           , "<br>\n"

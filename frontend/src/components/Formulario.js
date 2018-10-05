@@ -9,13 +9,16 @@ import proxy from '../config/proxy/proxy';
 //import './App.css';
 
 const CLIENT = {
-  sandbox: 'AYyfLfv2EFcbthfDhHxTtXTF9BbqOPlgCBTOW7oZtapwjCEdtMMz5xDhZ4QIyqkHUwDrXp0wHvUX_1Oc',
-  production: 'Ab9QYd9MY8fCOw0dZdA-3dJS2Np10VkFyTaA0_hLUMbztEHD5iEo2ZmVy2fI3fDlbLwVGQbo0D6sViL_',
+  sandbox: '',
+  production: '',
 };
 
-const ENV = process.env.NODE_ENV === 'production'
+/*const ENV = process.env.NODE_ENV === 'production'
   ? 'production'
-  : 'sandbox';
+  : 'sandbox';*/
+
+  const ENV = 'production'
+  
 
 class Formulario extends Component {
 
@@ -33,16 +36,19 @@ class Formulario extends Component {
       email:'',
       comentario:'',
       fecha:'',
-      hora:'',
+      hora:'11:00',
       formapago:'',
       verificacion:'',
       modal:false,
       message:'',
       type:'',
-      color:''
+      color:'',
+      precio:1
     };
     this.toggle = this.toggle.bind(this);
     this.onClickReservar=this.onClickReservar.bind(this);
+    this.rollback=this.rollback.bind(this);
+    this.onPayment=this.onPayment.bind(this);
   }
 
   toggle() {
@@ -50,7 +56,7 @@ class Formulario extends Component {
       modal: !this.state.modal
     });
     if(this.state.color==='success'){
-      window.location = 'www.killari.com.ec';
+      window.location = 'http://www.killari.com.ec';
     }
   }
 
@@ -60,12 +66,74 @@ class Formulario extends Component {
         if(event.target.value==='Por favor, seleccione el servicio'){
           this.setState({
             fadePrecio: false,
-            servicio:''
+            servicio:'',
+            precio:0
           });
-        }else{
+        }else if(event.target.value==='Relajante manual/Relaxing massage'){
           this.setState({
             fadePrecio: true,
-            servicio:event.target.value
+            servicio:event.target.value,
+            precio:60
+          });
+        }else if(event.target.value==='Relajante con pindas/Relaxing massage with "Pindas" (herbal compress balls)'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:65
+          });
+        }else if(event.target.value==='Relajante con piedras calientes/Relaxing massage with hot stones'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:65
+          });
+        }else if(event.target.value==='Descontracturante manual/Manual loosening massage'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:60
+          });
+        }else if(event.target.value==='Descontracturante con bambú/Loosening massage with bamboo'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:65
+          });
+        }else if(event.target.value==='Express'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:40
+          });
+        }else if(event.target.value==='Reflexología/Reflexology'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:40
+          });
+        }else if(event.target.value==='Chocoterapia/Choco therapy'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:70
+          });
+        }else if(event.target.value==='Vinoterapia/Wine therapy'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:70
+          });
+        }else if(event.target.value==='Hidratación facial/Facial hydration'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:35
+          });
+        }else if(event.target.value==='Depilaciones corporales/Body depilations'){
+          this.setState({
+            fadePrecio: true,
+            servicio:event.target.value,
+            precio:0
           });
         }
         break;
@@ -187,6 +255,7 @@ class Formulario extends Component {
     axios.post(proxy+'/request.php', data)
       .then(function (response) {
         // handle success
+        console.log(response.data);
         if(response.data==='ok'){
           this.setState({
             modal:true,
@@ -194,6 +263,29 @@ class Formulario extends Component {
             message:'Su reservación ha sido recibida correctamente. Le llegará un correo confirmando su pedido.',
             color:'success'
           });
+        }else if(response.data==='error 401'){
+          this.setState({
+            modal:true,
+            type:'Error',
+            message:'Ya existe una reserva, por favor cambie la fecha o la hora.',
+            color:'danger'
+          });
+        }else if(response.data==='error 402'){
+          this.setState({
+            modal:true,
+            type:'Error',
+            message:'No se pudo guardar su reservación. Por favor revise que el correo ingresado sea correcto e intente nuevamente.',
+            color:'danger'
+          });
+          this.rollback();
+        }else if(response.data==='error 403'){
+          this.setState({
+            modal:true,
+            type:'Error',
+            message:'No se pudo guardar su reservación. Por favor intente nuevamente.',
+            color:'success'
+          });
+          this.rollback();
         }else{
           this.setState({
             modal:true,
@@ -202,7 +294,7 @@ class Formulario extends Component {
             color:'danger'
           });
         }
-      }).catch(function (error) {
+      }.bind(this)).catch(function (error) {
         // handle error
         this.setState({
           modal:true,
@@ -210,9 +302,12 @@ class Formulario extends Component {
           message:'Hubo un error al realizar su reservación. Por favor, inténtelo de nuevo. Error: '+error,
           color:'danger'
         });
-      });
+      }.bind(this));
   }
 
+  rollback(){
+    console.log('rollback');
+  }
 
   onClickPago=(event)=>{
     switch(event.target.id){
@@ -237,30 +332,69 @@ class Formulario extends Component {
 
   }
 
+  onPayment(caso, data){
+    switch (caso){
+      case 'success':{
+        this.setState({
+          modal:true,
+          type:'Exito',
+          message:'Se ha realizado el pago con éxito. '+data,
+          color:'success'
+        });
+        break;
+      }
+      case 'error':{
+        this.setState({
+          modal:true,
+          type:'Error',
+          message:'Hubo un error al intentar realizar el pago. Por favor intente nuevamente. '+data,
+          color:'danger'
+        });
+        break;
+      }
+      case 'cancel':{
+        this.setState({
+          modal:true,
+          type:'Error',
+          message:'Pago cancelado. '+data,
+          color:'danger'
+        });
+        break;
+      }
+      default:{
+        break;
+      }
+    }
+  }
 
   render() {
 
-    const onSuccess = (payment) =>
-      console.log('Successful payment!', payment);
+    const onSuccess = (payment) =>{
+      //console.log('Successful payment!', payment);
+      this.onPayment('success',payment);
+    }
+      
 
-    const onError = (error) =>
-      console.log('Erroneous payment OR failed to load script!', error);
+    const onError = (error) =>{
+      //console.log('Erroneous payment OR failed to load script!', error);
+      this.onPayment('error',error);
+    }
+      
 
-    const onCancel = (data) =>
-      console.log('Cancelled payment!', data);
+    const onCancel = (data) =>{
+      //console.log('Cancelled payment!', data);
+      this.onPayment('cancel',data);
+    }
+      
 
     const num1=1;
     const num2=2;
-    const precio=15.99;
 
       
     return (
       <Container style={styleForm}>
         <Modal modal={this.state.modal} toggle={this.toggle} message={this.state.message} type={this.state.type} color={this.state.color}></Modal>
         
-        <h1 style={styling}>RESERVE UNA CITA</h1>
-        <br></br>
-        <br></br>
         <hr size="10"></hr>
         <br></br>
         
@@ -316,10 +450,17 @@ class Formulario extends Component {
             <Label style={stylingSubLabel}>Servicio <font color="red">*</font></Label>
             <Input type="select" name="servicio" placeholder="Por favor, seleccione el servicio" onChange={this.handle.bind(this)}>
               <option>Por favor, seleccione el servicio</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+              <option>Relajante manual/Relaxing massage</option>
+              <option>Relajante con pindas/Relaxing massage with "Pindas" (herbal compress balls)</option>
+              <option>Relajante con piedras calientes/Relaxing massage with hot stones</option>
+              <option>Descontracturante manual/Manual loosening massage</option>
+              <option>Descontracturante con bambú/Loosening massage with bamboo</option>
+              <option>Express</option>
+              <option>Reflexología/Reflexology</option>
+              <option>Chocoterapia/Choco therapy</option>
+              <option>Vinoterapia/Wine therapy</option>
+              <option>Hidratación facial/Facial hydration</option>
+              <option>Depilaciones corporales/Body depilations</option>
             </Input>
           </FormGroup>    
         <Row>
@@ -376,7 +517,7 @@ class Formulario extends Component {
                   env={ENV}
                   commit={true}
                   currency={'USD'}
-                  total={100}
+                  total={this.state.precio}
                   onSuccess={onSuccess}
                   onError={onError}
                   onCancel={onCancel} />
@@ -384,7 +525,7 @@ class Formulario extends Component {
             </Col>
             <Col md={6}>
             <Fade in={this.state.fadePrecio}  className="mt-3">
-              <h1>Precio: <Badge color="success">${precio}</Badge></h1>
+              <h1>Precio: <Badge color="success">${this.state.precio}</Badge></h1>
             </Fade>
             
             </Col>
@@ -395,7 +536,7 @@ class Formulario extends Component {
         <FormGroup>
             <Label style={stylingSubLabel}>Por favor, ingrese el resultado de la suma.</Label>
             <Input type="text" name="verificacion" onChange={this.handle.bind(this)}/>
-            <h6>¿Cuál es la suma entre {num1} + {num2}</h6>
+            <h6>{num1} + {num2}</h6>
         </FormGroup>
       </Form>
       <br></br>
