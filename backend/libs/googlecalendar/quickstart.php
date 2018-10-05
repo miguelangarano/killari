@@ -72,7 +72,7 @@ class SyncCalendar{
                 ),
                 'attendees' => array(
                 array('email' => $obj->email),
-                array('email' => 'centroderelajacion@killari.com.ec'),
+                array('email' => 'killari.spa@gmail.com'),
                 ),
                 'reminders' => array(
                 'useDefault' => FALSE,

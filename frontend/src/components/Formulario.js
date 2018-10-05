@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Col, Row, Button, Form, FormGroup, Label, Input, Container, Fade, Badge} from 'reactstrap';
 import PaypalButton from './PaypalButton';
+import PaypalMeButton from './PaypalMeButton';
 import Modal from './Modal';
 import axios from 'axios';
 import proxy from '../config/proxy/proxy';
 //import logo from './logo.svg';
 //import './App.css';
 
-const CLIENT = {
-  sandbox: '',
-  production: '',
-};
+/*const CLIENT = {
+  //sandbox: process.env.REACT_APP_PAYPAL_CLIENT_ID_SANDBOX,
+  production: process.env.REACT_APP_PAYPAL_CLIENT_ID_PRODUCTION,
+};*/
 
 /*const ENV = process.env.NODE_ENV === 'production'
   ? 'production'
@@ -43,12 +44,13 @@ class Formulario extends Component {
       message:'',
       type:'',
       color:'',
-      precio:1
+      precio:0
     };
     this.toggle = this.toggle.bind(this);
     this.onClickReservar=this.onClickReservar.bind(this);
     this.rollback=this.rollback.bind(this);
     this.onPayment=this.onPayment.bind(this);
+    
   }
 
   toggle() {
@@ -367,9 +369,11 @@ class Formulario extends Component {
     }
   }
 
+  
+
   render() {
 
-    const onSuccess = (payment) =>{
+    /*const onSuccess = (payment) =>{
       //console.log('Successful payment!', payment);
       this.onPayment('success',payment);
     }
@@ -384,7 +388,9 @@ class Formulario extends Component {
     const onCancel = (data) =>{
       //console.log('Cancelled payment!', data);
       this.onPayment('cancel',data);
-    }
+    }*/
+
+    
       
 
     const num1=1;
@@ -512,7 +518,7 @@ class Formulario extends Component {
                 </FormGroup>
               </FormGroup>
               <Fade in={this.state.fadeIn} tag="h5" className="mt-3" >
-                <PaypalButton
+                {/*<PaypalButton
                   client={CLIENT}
                   env={ENV}
                   commit={true}
@@ -520,7 +526,9 @@ class Formulario extends Component {
                   total={this.state.precio}
                   onSuccess={onSuccess}
                   onError={onError}
-                  onCancel={onCancel} />
+                onCancel={onCancel} />*/}
+                <PaypalMeButton/>
+
               </Fade>
             </Col>
             <Col md={6}>
@@ -548,13 +556,13 @@ class Formulario extends Component {
   }
 }
 
-var styling={
+/*var styling={
   "textAlign":"center",
   "color":"#00a8a9",
   "fontFamily":"Arial, Helvetica, sans-serif",
   "fontStyle":"oblique",
   "fontSize":"20pt"
-}
+}*/
 
 var stylingLabel={
   "color":"#00a8a9",

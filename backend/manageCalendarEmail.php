@@ -54,13 +54,13 @@ class GoogleApiAndEmailManager{
         $cliente=new Client();
         $client=$cliente->getClient();
         $ok=$cliente->getToken($client);
-        echo $ok;
+        //echo $ok;
 
         if($ok=='ok'){
-            //echo 'este es ok: '.$ok;
+            echo 'este es ok: '.$ok;
             return $client;
         }elseif(!empty($ok)){
-            //echo 'este no es ok:'.$ok;
+            echo 'este no es ok:'.$ok;
             $mail=new Email();
             $mail->sendEmail('http://www.killari.com.ec/reservaciones/backend/', $ok);
         }else{

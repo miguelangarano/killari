@@ -27,7 +27,7 @@ class Email{
             //Recipients
             $mail->setFrom('centroderelajacion@killari.com.ec', 'Killari SPA');
             //$mail->addAddress('centroderelajacion@killari.com.ec', 'Sistema Killari');     // Add a recipient
-            $mail->addAddress('miguelangarano@gmail.com', 'Sistema Killari');     // Add a recipient
+            $mail->addAddress('killari.spa@gmail.com', 'Sistema Killari');     // Add a recipient
 
 
             //Content
@@ -49,10 +49,10 @@ class Email{
             $mail->send();
             //echo 'Message has been sent';
             $ok='ok';
-            echo $ok;
+            echo 'correoooooo '.$ok;
         } catch (Exception $e) {
             $message= 'Message could not be sent. Mailer Error: '. $mail->ErrorInfo;
-            return $message;
+            echo $message;
 
         }
     }
