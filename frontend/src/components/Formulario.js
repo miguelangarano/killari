@@ -9,8 +9,8 @@ import proxy from '../config/proxy/proxy';
 //import './App.css';
 
 const CLIENT = {
-  sandbox: 'AYyfLfv2EFcbthfDhHxTtXTF9BbqOPlgCBTOW7oZtapwjCEdtMMz5xDhZ4QIyqkHUwDrXp0wHvUX_1Oc',
-  production: 'Ab9QYd9MY8fCOw0dZdA-3dJS2Np10VkFyTaA0_hLUMbztEHD5iEo2ZmVy2fI3fDlbLwVGQbo0D6sViL_',
+  sandbox: '',
+  production: '',
 };
 
 const ENV = process.env.NODE_ENV === 'production'
