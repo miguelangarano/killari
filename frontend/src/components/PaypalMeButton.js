@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import scriptLoader from 'react-async-script-loader';
 import image from '../images/paypal-button.png';
 
 class PaypalMeButton extends React.Component {
@@ -11,8 +9,9 @@ class PaypalMeButton extends React.Component {
   }
 
   openPaypalMe(){
-    console.log('holaaa paypalme');
-    window.location.href='https://www.paypal.me/KILLARIEC';
+    //console.log('holaaa paypalme');
+    this.props.onClicki();
+    window.open('https://www.paypal.me/KILLARIEC/'+this.props.precio,'_blank');
   }
   
   render() {

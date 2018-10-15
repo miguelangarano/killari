@@ -46,7 +46,7 @@ class Email{
             $mail->Subject = 'Reservacion de Killari Spa';
             //echo ('proxy: '.$proxy->getProxy());
             if($kind==1){
-                $homepage = file_get_contents($proxy.'libs/phpmailer/formato.html');
+                $homepage = file_get_contents(__DIR__.'/formato.html');
                 $variables=array();
                 $variables['nombre']=$obj->nombre;
                 $variables['apellido']=$obj->apellido;
@@ -58,7 +58,7 @@ class Email{
                     $homepage=str_replace('{{ '.$key.' }}',$value,$homepage);
                 }
             }else{
-                $homepage = file_get_contents($proxy.'libs/phpmailer/formato1.html');
+                $homepage = file_get_contents(__DIR__.'/formato1.html');
                 $variables=array();
                 $variables['nombre']=$obj->nombre;
                 $variables['apellido']=$obj->apellido;

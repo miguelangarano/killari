@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Col, Row, Button, Form, FormGroup, Label, Input, Container, Fade, Badge} from 'reactstrap';
-import PaypalButton from './PaypalButton';
+//import PaypalButton from './PaypalButton';
 import PaypalMeButton from './PaypalMeButton';
 import Modal from './Modal';
 import axios from 'axios';
@@ -18,7 +18,7 @@ import proxy from '../config/proxy/proxy';
   ? 'production'
   : 'sandbox';*/
 
-  const ENV = 'production'
+  //const ENV = 'production'
   
 
 class Formulario extends Component {
@@ -27,7 +27,7 @@ class Formulario extends Component {
   constructor(){
     super();
     this.state = { 
-      fadeIn: false, fadePrecio:false, fadeOcupado:false,
+      fadeIn: false, fadePrecio:false,
       servicio:'',
       nombre:'',
       apellido:'',
@@ -49,7 +49,8 @@ class Formulario extends Component {
     this.toggle = this.toggle.bind(this);
     this.onClickReservar=this.onClickReservar.bind(this);
     this.rollback=this.rollback.bind(this);
-    this.onPayment=this.onPayment.bind(this);
+    this.onPaypalMeClick=this.onPaypalMeClick.bind(this);
+    //this.onPayment=this.onPayment.bind(this);
     
   }
 
@@ -242,6 +243,7 @@ class Formulario extends Component {
 
   agregarReserva=(reserva)=>{
     let data=new FormData();
+    data.append('req','1');
     data.append('send','1');
     data.append('servicio',reserva.servicio);
     data.append('nombre',reserva.nombre);
@@ -254,7 +256,7 @@ class Formulario extends Component {
     data.append('fecha',reserva.fecha);
     data.append('hora',reserva.hora);
     data.append('formapago',reserva.formapago);
-    axios.post(proxy+'/request.php', data)
+    axios.post(proxy+'index.php', data)
       .then(function (response) {
         // handle success
         console.log(response.data);
@@ -334,7 +336,16 @@ class Formulario extends Component {
 
   }
 
-  onPayment(caso, data){
+  onPaypalMeClick=()=>{
+    this.setState({
+      modal:true,
+      type:'Advertencia',
+      message:'Despues de realizar el pago, no olvide terminar de hacer su reservación, caso contrario su reservación no será agendada.',
+      color:'warning'
+    });
+  }
+
+  /*onPayment(caso, data){
     switch (caso){
       case 'success':{
         this.setState({
@@ -367,7 +378,7 @@ class Formulario extends Component {
         break;
       }
     }
-  }
+  }*/
 
   
 
@@ -527,7 +538,7 @@ class Formulario extends Component {
                   onSuccess={onSuccess}
                   onError={onError}
                 onCancel={onCancel} />*/}
-                <PaypalMeButton/>
+                <PaypalMeButton precio={this.state.precio} onClicki={()=>this.onPaypalMeClick()}/>
 
               </Fade>
             </Col>
