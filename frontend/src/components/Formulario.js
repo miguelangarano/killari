@@ -102,7 +102,7 @@ class Formulario extends Component {
             servicio:event.target.value,
             precio:65
           });
-        }else if(event.target.value==='Express'){
+        }else if(event.target.value==='Masaje Express'){
           this.setState({
             fadePrecio: true,
             servicio:event.target.value,
@@ -472,7 +472,7 @@ class Formulario extends Component {
               <option>Relajante con piedras calientes/Relaxing massage with hot stones</option>
               <option>Descontracturante manual/Manual loosening massage</option>
               <option>Descontracturante con bambú/Loosening massage with bamboo</option>
-              <option>Express</option>
+              <option>Masaje Express</option>
               <option>Reflexología/Reflexology</option>
               <option>Chocoterapia/Choco therapy</option>
               <option>Vinoterapia/Wine therapy</option>

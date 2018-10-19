@@ -12,12 +12,20 @@ class GoogleApiAndEmailManager{
     function syncCalendar($obj, $client){
         $calendar=new SyncCalendar();
         $events=$calendar->addEvent($client, $obj);
+        $this->deleteEvent($obj->id);
     }
 
     function getCalendarList($client){
         $calendar=new SyncCalendar();
         $events=$calendar->listEventos($client);
         return $events;
+    }
+
+    function deleteEvent($id){
+        $db=Db::conectar();
+        $select=$db->prepare('DELETE FROM reservas WHERE id_reserva=:id');
+        $select->bindValue('id',$id);
+        $select->execute();
     }
 
     function getDbData(){
@@ -60,7 +68,7 @@ class GoogleApiAndEmailManager{
             echo 'este es ok: '.$ok;
             return $client;
         }elseif(!empty($ok)){
-            echo 'este no es ok:'.$ok;
+            //echo 'este no es ok:'.$ok;
             $mail=new Email();
             $mail->sendEmail('http://www.killari.com.ec/reservaciones/backend/', $ok);
         }else{
